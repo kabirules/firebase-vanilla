@@ -6,5 +6,6 @@
 
         <Button text="Sign in" />
         <Button text="Sign up" class="link" tap="register" />
+        <Button text="Google Sign up" class="link" tap="google_register" />
     </StackLayout>
 </Page>

@@ -1,10 +1,6 @@
 var frameModule = require("ui/frame");
-var observableModule = require("data/observable");
-
-var user = new observableModule.fromObject({
-    email: "user@domain.com",
-    password: "password"
-});
+var UserViewModel = require("../../shared/view-models/user-view-model");
+var user = new UserViewModel();
 
 var page;
 var email;
@@ -12,14 +8,51 @@ var email;
 exports.loaded = function(args) {
     page = args.object;
     page.bindingContext = user;
+    user.init();
 };
 
 exports.signIn = function() {
-    email = page.getViewById("email");
-    console.log(email.text);
+    user.login()
+        .catch(function(error) {
+            console.log(error);
+            dialogsModule.alert({
+                message: "Unfortunately we could not find your account.",
+                okButtonText: "OK"
+            });
+            return Promise.reject();
+        })
+        .then(function() {
+            frameModule.topmost().navigate("views/list/list");
+        });
 };
 
 exports.register = function() {
-    var topmost = frameModule.topmost();
-    topmost.navigate("views/register/register");
+    user.register()
+    .catch(function(error) {
+        console.log(error);
+        dialogsModule.alert({
+            message: "Error while registering",
+            okButtonText: "OK"
+        });
+        return Promise.reject();
+    })
+    .then(function() {
+        alert('Succesfully registered')
+    });
+};
+
+exports.google_register = function() {
+    console.log('starting google register');
+    user.google_register()
+    .catch(function(error) {
+        console.log(error);
+        dialogsModule.alert({
+            message: "Error while registering",
+            okButtonText: "OK"
+        });
+        return Promise.reject();
+    })
+    .then(function() {
+        alert('Succesfully registered')
+    });
 };

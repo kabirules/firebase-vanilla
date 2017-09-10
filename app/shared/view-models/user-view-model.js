@@ -1,6 +1,6 @@
-var validator = require("email-validator");
+//var validator = require("email-validator");
 var config = require("../../shared/config");
-var fetchModule = require("fetch");
+var firebase = require("nativescript-plugin-firebase");
 var observableModule = require("data/observable");
 
 function User(info) {
@@ -13,44 +13,60 @@ function User(info) {
     });
 
     viewModel.login = function() {
-        return fetchModule.fetch(config.apiUrl + "oauth/token", {
-            method: "POST",
-            body: JSON.stringify({
-                username: viewModel.get("email"),
-                password: viewModel.get("password"),
-                grant_type: "password"
-            }),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(handleErrors)
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            config.token = data.Result.access_token;
-        });
-    };
-
-    viewModel.register = function() {
-        return fetchModule.fetch(config.apiUrl + "Users", {
-            method: "POST",
-            body: JSON.stringify({
-                Username: viewModel.get("email"),
-                Email: viewModel.get("email"),
-                Password: viewModel.get("password")
-            }),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(handleErrors);
+        return firebase.login({
+            type: firebase.loginType.PASSWORD,
+            email: viewModel.get("email"),
+            password: viewModel.get("password")
+          }).then(
+            function (response) {
+                config.uid = response.uid
+                return response;
+            });
     };
     
+    viewModel.register = function() {
+        return firebase.createUser({
+            email: viewModel.get("email"),
+            password: viewModel.get("password")
+          }).then(
+              function (response) {
+                console.log(response);
+                return response;
+              }
+          );
+    };
+
+    viewModel.google_register = function() {
+        return firebase.login({
+            type: firebase.LoginType.GOOGLE
+        }).then(
+            function (result) {
+                console.log(result);
+                JSON.stringify(result);
+            },
+            function (errorMessage) {
+                console.log(errorMessage);
+            }
+        );
+    }
+    /*
     viewModel.isValidEmail = function() {
         var email = this.get("email");
         return validator.validate(email);
-    };    
+    };
+*/
+    viewModel.init = function(){
+        firebase.init({
+            url: config.apiUrl
+        }).then(
+          function (instance) {
+            console.log("firebase.init done");
+          },
+          function (error) {
+            console.log("firebase.init error: " + error);
+          }
+        );
+      };    
 
     return viewModel;
 }
