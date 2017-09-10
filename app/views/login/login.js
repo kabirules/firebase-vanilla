@@ -1,6 +1,9 @@
 var frameModule = require("ui/frame");
 var UserViewModel = require("../../shared/view-models/user-view-model");
-var user = new UserViewModel();
+var user = new UserViewModel({
+    email: "javifont@gmail.com",
+    password: "123456"
+});
 
 var page;
 var email;

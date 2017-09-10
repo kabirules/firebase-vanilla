@@ -14,11 +14,14 @@ function User(info) {
 
     viewModel.login = function() {
         return firebase.login({
-            type: firebase.loginType.PASSWORD,
+            type: firebase.LoginType.PASSWORD,
+            passwordOptions: {
             email: viewModel.get("email"),
             password: viewModel.get("password")
+            }
           }).then(
             function (response) {
+                console.log(response.uid);
                 config.uid = response.uid
                 return response;
             });
@@ -30,13 +33,14 @@ function User(info) {
             password: viewModel.get("password")
           }).then(
               function (response) {
-                console.log(response);
+                console.log(response.uid);
                 return response;
               }
           );
     };
 
     viewModel.google_register = function() {
+        console.log('viewModel.google_register');
         return firebase.login({
             type: firebase.LoginType.GOOGLE
         }).then(
