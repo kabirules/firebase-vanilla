@@ -21,8 +21,8 @@ function User(info) {
             }
           }).then(
             function (response) {
-                console.log(response.uid);
                 config.uid = response.uid
+                config.firebaseUser = response;
                 return response;
             });
     };
@@ -33,7 +33,6 @@ function User(info) {
             password: viewModel.get("password")
           }).then(
               function (response) {
-                console.log(response.uid);
                 return response;
               }
           );
@@ -45,7 +44,6 @@ function User(info) {
             type: firebase.LoginType.GOOGLE
         }).then(
             function (result) {
-                console.log(result);
                 JSON.stringify(result);
             },
             function (errorMessage) {
@@ -63,14 +61,27 @@ function User(info) {
         firebase.init({
             url: config.apiUrl
         }).then(
-          function (instance) {
+            function (instance) {
             console.log("firebase.init done");
-          },
-          function (error) {
+            },
+            function (error) {
             console.log("firebase.init error: " + error);
-          }
+            }
         );
-      };    
+    };
+    
+    viewModel.add = function(data) {
+        return firebase.push( '/Groceries', {
+          'Name': data,
+          'UID': config.uid
+        });
+    };
+
+    viewModel.delete = function(index) {
+        //var id = viewModel.getItem(index).id;
+        id = 'KvDcqD9aP2ypY9LjPpt';
+        return firebase.remove("/Groceries/"+id+"");
+    };    
 
     return viewModel;
 }

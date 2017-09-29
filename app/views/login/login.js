@@ -1,3 +1,4 @@
+var dialogsModule = require("ui/dialogs");
 var frameModule = require("ui/frame");
 var UserViewModel = require("../../shared/view-models/user-view-model");
 var user = new UserViewModel({
@@ -15,8 +16,10 @@ exports.loaded = function(args) {
 };
 
 exports.signIn = function() {
+    user.set("isLoading", true);
     user.login()
         .catch(function(error) {
+            user.set("isLoading", false);
             console.log(error);
             dialogsModule.alert({
                 message: "Unfortunately we could not find your account.",
@@ -24,14 +27,21 @@ exports.signIn = function() {
             });
             return Promise.reject();
         })
-        .then(function() {
-            frameModule.topmost().navigate("views/list/list");
+        .then(function(firebase_user) {
+            user.set("isLoading", false);
+            var navigationOptions={
+                moduleName:'/views/data/data',
+                context:{user: user}
+            }
+            frameModule.topmost().navigate(navigationOptions);
         });
 };
 
 exports.register = function() {
+    user.set("isLoading", true);
     user.register()
     .catch(function(error) {
+        user.set("isLoading", false);
         console.log(error);
         dialogsModule.alert({
             message: "Error while registering",
@@ -40,14 +50,18 @@ exports.register = function() {
         return Promise.reject();
     })
     .then(function() {
-        alert('Succesfully registered')
+        user.set("isLoading", false);
+        //alert('Succesfully registered');
+        frameModule.topmost().navigate("/views/data/data");
     });
 };
 
 exports.google_register = function() {
+    user.set("isLoading", true);
     console.log('starting google register');
     user.google_register()
     .catch(function(error) {
+        user.set("isLoading", false);
         console.log(error);
         dialogsModule.alert({
             message: "Error while registering",
@@ -56,6 +70,7 @@ exports.google_register = function() {
         return Promise.reject();
     })
     .then(function() {
-        alert('Succesfully registered')
+        user.set("isLoading", false);
+        frameModule.topmost().navigate("/views/data/data");
     });
 };

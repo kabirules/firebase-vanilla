@@ -1,0 +1,11 @@
+<Page loaded="loaded">
+    <StackLayout orientation="vertical">
+        <Label text="email"/>
+        <Label id="email"/>
+        <Label text="id"/>
+        <Label id="uid"/>
+        <Label />
+        <Button text="Add" tap="addData" />
+        <Button text="Delete" tap="deleteData" />
+    </StackLayout>
+</Page>
