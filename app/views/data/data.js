@@ -18,13 +18,28 @@ exports.loaded = function(args) {
 };
 
 exports.addData = function(args) {
-    user.add('arras')
+    data = page.getViewById('field1').text;
+    user.add(data)
     .catch(function(error) {
         console.log(error);
         return Promise.reject();
     })
     .then(function(result) {
         console.log(result);
+        page.getViewById('field1').text = '';
+    });
+}
+
+exports.setValue = function(args) {
+    data = page.getViewById('field1').text;
+    user.setValue(data)
+    .catch(function(error) {
+        console.log(error);
+        return Promise.reject();
+    })
+    .then(function(result) {
+        console.log(result);
+        page.getViewById('field1').text = '';
     });
 }
 

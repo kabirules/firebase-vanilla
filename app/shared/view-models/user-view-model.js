@@ -77,6 +77,13 @@ function User(info) {
         });
     };
 
+    viewModel.setValue = function(data){
+        return firebase.setValue(
+            '/companies',
+            {foo:data}
+        );        
+    }
+
     viewModel.delete = function(index) {
         //var id = viewModel.getItem(index).id;
         id = 'KvDcqD9aP2ypY9LjPpt';

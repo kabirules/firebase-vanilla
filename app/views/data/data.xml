@@ -5,7 +5,9 @@
         <Label text="id"/>
         <Label id="uid"/>
         <Label />
+        <TextField id="field1" hint="field one" />
         <Button text="Add" tap="addData" />
+        <Button text="Set Value" tap="setValue" />
         <Button text="Delete" tap="deleteData" />
     </StackLayout>
 </Page>
