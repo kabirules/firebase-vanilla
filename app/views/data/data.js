@@ -43,6 +43,10 @@ exports.setValue = function(args) {
     });
 }
 
+exports.query = function(args) {
+    user.query();
+};
+
 exports.deleteData = function(args) {
     user.delete('KvDcqD9aP2ypY9LjPpt')
     .catch(function(error) {

@@ -84,14 +84,50 @@ function User(info) {
         );        
     }
 
+    viewModel.query = function() {
+        firebase.query(
+            onQueryEvent,
+            "/Groceries",
+            {
+                singleEvent: true,
+                orderBy: {
+                    type: firebase.QueryOrderByType.CHILD,
+                    value: 'since'
+                }
+                /*
+                },
+                ranges: {
+                      type: firebase.QueryRangeType.START_AT,
+                      value: 1999
+                },
+                limit: {
+                    type: firebase.QueryLimitType.LAST,
+                    value: 2
+                }
+                */
+            }
+        );
+    }
+
     viewModel.delete = function(index) {
         //var id = viewModel.getItem(index).id;
-        id = 'KvDcqD9aP2ypY9LjPpt';
+        id = '-KvI6UEfPfmh0ooH4jT5';
         return firebase.remove("/Groceries/"+id+"");
-    };    
+    };
 
     return viewModel;
 }
+
+var onQueryEvent = function(result) {
+    // note that the query returns 1 match at a time
+    // in the order specified in the query
+    if (!result.error) {
+        console.log("Event type: " + result.type);
+        console.log("Key: " + result.key);
+        console.log("Value: " + JSON.stringify(result.value));
+    }
+};
+
 
 function handleErrors(response) {
     if (!response.ok) {
